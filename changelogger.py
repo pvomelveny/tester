@@ -89,7 +89,7 @@ def git_history_between(old, new):
 ## Main CLI
 #####
 @click.command()
-@click.option("keep", default=100, help="number of logs to keep")
+@click.option("--keep", default=100, help="number of logs to keep")
 def cli(keep):
     # Check if this project has previous commits
     # Load the json if so
