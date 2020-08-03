@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import click
-from datetime import date
+from datetime import datetime
 import json
 from jinja2 import Environment, PackageLoader, select_autoescape
 import os
@@ -27,9 +27,9 @@ GIT_PROJECT = GIT_URL.split("/")[-1].replace(".git", "")
 
 
 #####
-## TODAY
+## RIGHT NOW
 #####
-TODAY = date.today().strftime("%Y-%m-%d")
+NOW = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 #####
 ## File Functions
@@ -59,7 +59,7 @@ def write_log(payload):
 
 def write_initial_log():
     payload = {
-        TODAY: {
+        NOW: {
             "hash": "{}".format(GIT_HEAD),
             "changes": [
                 "This is where we have started logging, stay tuned for real logs"
@@ -78,7 +78,7 @@ def git_history_between(old, new):
         stdout=subprocess.PIPE,
     )
     lines = result.stdout.decode("utf-8").split("\n")
-    return lines
+    return [line for line in lines if line]
 
 
 #####
@@ -89,7 +89,8 @@ def git_history_between(old, new):
 ## Main CLI
 #####
 @click.command()
-def cli():
+@click.option("keep", default=100, help="number of logs to keep")
+def cli(keep):
     # Check if this project has previous commits
     # Load the json if so
     # If not, start the log and end
@@ -108,6 +109,15 @@ def cli():
     # Git new commit history
     new_commits = git_history_between(last_commit, GIT_HEAD)
     print(new_commits)
+
+    # Update data and remove logs over keep limit
+    data[NOW] = {"hash": GIT_HEAD, "changes": new_commits}
+    sorted_keys = sorted(data, reverse=True)
+
+    changelog = {key: data[key] for key in sorted_keys[:keep]}
+
+    # Write out this new to data
+    write_log(changelog)
 
 
 if __name__ == "__main__":
