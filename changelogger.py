@@ -57,7 +57,7 @@ def write_log(payload):
 
 
 def write_initial_log():
-    payload = {TODAY: {"hash": f"{GIT_COMMIT}", "changes": []}}
+    payload = {TODAY: {"hash": "{}".format(GIT_COMMIT), "changes": []}}
     write_log(payload)
 
 
