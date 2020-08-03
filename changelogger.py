@@ -130,7 +130,7 @@ def cli(keep):
         project_name=GIT_PROJECT, sorted_keys=sorted_keys, changelog=changelog
     )
 
-    out_file = str(CHANGELOG_DIR) + "{}-changelog.html".format(GIT_PROJECT)
+    out_file = str(CHANGELOG_DIR / "{}-changelog.html".format(GIT_PROJECT))
     print(out_file)
     with open(out_file, "w") as f:
         f.write(rendered)
