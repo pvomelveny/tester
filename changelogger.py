@@ -3,7 +3,7 @@
 import click
 from datetime import datetime
 import json
-from jinja2 import Environment, PackageLoader, select_autoescape
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 import os
 from pathlib import Path
 import shutil
@@ -118,6 +118,17 @@ def cli(keep):
 
     # Write out this new to data
     write_log(changelog)
+
+    # Create Jinja Template
+    env = Environment(
+        loader=FileSystemLoader(str(TEMPLATES)),
+        autoescape=select_autoescape(["html", "xml"]),
+    )
+
+    template = env.get_template("changelog.jinja")
+    rendered = template.render(
+        project_name=GIT_PROJECT, sorted_keys=sorted_keys, changelog=changelog
+    )
 
 
 if __name__ == "__main__":
