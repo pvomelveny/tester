@@ -130,6 +130,9 @@ def cli(keep):
         project_name=GIT_PROJECT, sorted_keys=sorted_keys, changelog=changelog
     )
 
+    with open(str(CHANGELOG_DIR) + "{}-clangelog.html".format(GIT_PROJECT), "w") as f:
+        f.write(rendered)
+
 
 if __name__ == "__main__":
     cli()
