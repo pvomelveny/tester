@@ -52,7 +52,7 @@ def write_log(payload):
     data_file = DATA_DIR / (GIT_PROJECT + ".json")
     # TODO: remove print
     print(data_file)
-    with open(data_file, "w") as f:
+    with open(str(data_file), "w") as f:
         json.dump(payload, f)
 
 
