@@ -24,6 +24,7 @@ DATA_DIR = CHANGELOG_DIR / "data"
 GIT_HEAD = os.environ["GIT_COMMIT"]
 GIT_URL = os.environ["GIT_URL"]
 GIT_PROJECT = GIT_URL.split("/")[-1].replace(".git", "")
+BUILD_NUMBER = os.environ.get("BUILD_NUMBER")
 
 
 #####
@@ -64,6 +65,7 @@ def write_initial_log():
             "changes": [
                 "This is where we have started logging, stay tuned for real logs"
             ],
+            "build_number": BUILD_NUMBER,
         }
     }
     write_log(payload)
@@ -111,7 +113,7 @@ def cli(keep):
     print(new_commits)
 
     # Update data and remove logs over keep limit
-    data[NOW] = {"hash": GIT_HEAD, "changes": new_commits}
+    data[NOW] = {"hash": GIT_HEAD, "changes": new_commits, "build_number": BUILD_NUMBER}
     sorted_keys = sorted(data, reverse=True)
 
     changelog = {key: data[key] for key in sorted_keys[:keep]}
@@ -130,7 +132,7 @@ def cli(keep):
         project_name=GIT_PROJECT, sorted_keys=sorted_keys, changelog=changelog
     )
 
-    out_file = str(CHANGELOG_DIR / "{}-changelog.html".format(GIT_PROJECT))
+    out_file = str(CHANGELOG_DIR / "log" / "{}.html".format(GIT_PROJECT))
     print(out_file)
     with open(out_file, "w") as f:
         f.write(rendered)
