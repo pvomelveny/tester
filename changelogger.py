@@ -41,7 +41,7 @@ def maybe_get_data():
     """
     data_file = DATA_DIR / (GIT_PROJECT + ".json")
     if data_file.exists():
-        with open(data_file, "r") as f:
+        with open(str(data_file), "r") as f:
             data = json.load(f)
     else:
         data = None
