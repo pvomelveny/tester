@@ -74,7 +74,7 @@ def write_initial_log():
 #####
 def git_history_between(old, new):
     result = subprocess.run(
-        ["git", "--oneline", "--ancestry-path", "{}..{}".format(old, new)],
+        ["git", "log", "--oneline", "--ancestry-path", "{}..{}".format(old, new)],
         stdout=subprocess.PIPE,
     )
     lines = result.stdout.decode("utf-8").split("\n")
