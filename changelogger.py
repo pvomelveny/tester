@@ -11,7 +11,7 @@ import shutil
 #####
 ## PATH CONSTANTS
 #####
-CHANGELOG_DIR = Path("~/.jenkins/userContent/changelog")
+CHANGELOG_DIR = Path("~/.jenkins/userContent/changelog").resolve()
 # CHANGELOG_DIR = Path(".")
 TEMPLATES = CHANGELOG_DIR / "templates"
 DATA_DIR = CHANGELOG_DIR / "data"
