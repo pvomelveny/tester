@@ -137,4 +137,4 @@ def cli(keep):
 
 
 if __name__ == "__main__":
-    cli(1)
+    cli()
