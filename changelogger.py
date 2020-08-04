@@ -24,7 +24,9 @@ DATA_DIR = CHANGELOG_DIR / "data"
 GIT_HEAD = os.environ["GIT_COMMIT"]
 GIT_URL = os.environ["GIT_URL"]
 GIT_PROJECT = GIT_URL.split("/")[-1].replace(".git", "")
-BUILD_NUMBER = os.environ.get("BUILD_NUMBER")
+GIT_BRANCH = os.environ["GIT_BRANCH"]
+BUILD_NUMBER = os.environ["BUILD_NUMBER"]
+BUILD_COMMENTS = os.environ["BUILD_COMMENTS"]
 
 
 #####
@@ -61,11 +63,13 @@ def write_log(payload):
 def write_initial_log():
     payload = {
         NOW: {
-            "hash": "{}".format(GIT_HEAD),
+            "hash": GIT_HEAD,
+            "branch": GIT_BRANCH,
             "changes": [
                 "This is where we have started logging, stay tuned for real logs"
             ],
             "build_number": BUILD_NUMBER,
+            "build_comments": BUILD_COMMENTS,
         }
     }
     write_log(payload)
@@ -110,10 +114,15 @@ def cli(keep):
 
     # Git new commit history
     new_commits = git_history_between(last_commit, GIT_HEAD)
-    print(new_commits)
 
     # Update data and remove logs over keep limit
-    data[NOW] = {"hash": GIT_HEAD, "changes": new_commits, "build_number": BUILD_NUMBER}
+    data[NOW] = {
+        "hash": GIT_HEAD,
+        "branch": GIT_BRANCH,
+        "changes": new_commits,
+        "build_number": BUILD_NUMBER,
+        "build_comments": BUILD_COMMENTS,
+    }
     sorted_keys = sorted(data, reverse=True)
 
     changelog = {key: data[key] for key in sorted_keys[:keep]}
